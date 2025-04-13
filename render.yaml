@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: youtube-analyse
+    env: docker
+    plan: free
+    region: frankfurt
