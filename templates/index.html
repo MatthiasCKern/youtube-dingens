@@ -13,8 +13,8 @@
       <div class="card-body">
         <form method="post" enctype="multipart/form-data">
           <div class="mb-3">
-            <label for="file" class="form-label">Google Takeout ZIP-Datei:</label>
-            <input class="form-control" type="file" name="file" id="file" accept=".zip" required>
+            <label for="file" class="form-label">Wähle entweder eine ZIP-Datei oder direkt die Wiedergabeverlauf.json:</label>
+            <input class="form-control" type="file" name="file" id="file" accept=".zip,.json" required>
           </div>
           <button class="btn btn-success" type="submit">Analysieren</button>
         </form>
@@ -26,19 +26,16 @@
     <div class="alert alert-info" role="alert">
       <h4 class="alert-heading">So funktioniert es:</h4>
       <ol>
-        <li>Gehe zu <a href="https://takeout.google.com/b/103094765263082455193/settings/takeout?hl=de" target="_blank">Google Takeout</a>.</li>
-        <li>Wähle nur <strong>YouTube und YouTube Music</strong> aus<br>
-          <img src="/static/images/takeout1.png" class="img-fluid my-2" alt="YouTube Auswahl Screenshot"></li>
-        <li>Klicke auf <strong>Mehrere Formate</strong> und wähle bei <strong>Verlauf</strong> das Format <strong>JSON</strong><br>
-          <img src="/static/images/takeout2.png" class="img-fluid my-2" alt="Format JSON Screenshot"></li>
-        <li>Klicke auf <strong>Weiter</strong>, wähle <strong>ZIP</strong> und z. B. 2 GB, und erstelle den Export<br>
-          <img src="/static/images/takeout3.png" class="img-fluid my-2" alt="Exportoption Screenshot"></li>
-        <li>Du erhältst per E-Mail einen Link zum Download der ZIP-Datei.</li>
-        <li>Lade die json Datei hier im Tool hoch, um deinen Verlauf auszuwerten.</li>
-            <img src="/static/images/takeout4.png" class="img-fluid my-2" alt="NurDieJson"></li>
+        <li>Gehe zu <a href="https://takeout.google.com/" target="_blank">Google Takeout</a>.</li>
+        <li>Wähle <strong>YouTube und YouTube Music</strong> und das Format <strong>JSON</strong>.</li>
+        <li><img src="/static/images/takeout1.png" class="img-fluid my-2" alt="YouTube und YouTube Music auswählen"></li>
+        <li><img src="/static/images/takeout2.png" class="img-fluid my-2" alt="auf json welchseln"></li>
+        <li><img src="/static/images/takeout3.png" class="img-fluid my-2" alt="export erstellen"></li>
+        <li>Du kannst entweder die ganze ZIP-Datei hochladen oder nur die Datei <code>Wiedergabeverlauf.json</code>.</li>
+        <li><strong>Empfehlung:</strong> Lade direkt die JSON-Datei hoch für schnellere Analyse.</li>
+        <li><img src="/static/images/takeout4.png" class="img-fluid my-2" alt="Nur JSON auswählen"></li>
       </ol>
     </div>
   </div>
 </body>
 </html>
-

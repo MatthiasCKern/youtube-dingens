@@ -52,6 +52,7 @@
 
   <script>
     const watchEventsData = {{ watchEvents | tojson | safe }};
+    const topChannelsData = {{ top_channels | tojson | safe }};
     const summaryDiv = document.getElementById("summary");
     const startDateInput = document.getElementById("startDate");
     const endDateInput = document.getElementById("endDate");
@@ -60,7 +61,7 @@
     let weeklyChart;
 
     let defaultStartDate, defaultEndDate;
-    let cachedTopChannels = [];
+    let cachedTopChannels = topChannelsData.map(name => [name, { duration: 0, count: 0 }]);
 
     function formatMinutes(min) {
       const h = Math.floor(min / 60);
@@ -110,12 +111,6 @@
           </div>
         `;
       }).join('');
-    }
-
-    function initializeChannelList(filtered) {
-      const channelStats = groupBy(filtered, e => e.channel);
-      cachedTopChannels = Object.entries(channelStats).sort((a, b) => b[1].duration - a[1].duration).slice(0, 20);
-      renderChannelList(cachedTopChannels);
     }
 
     function renderBarChart(lastWeekData, thisWeekData) {
@@ -179,7 +174,11 @@
     }
 
     function renderQuickAnalysis(title, data, start, end) {
+      if (!data || data.length === 0) return '';
+
       const summary = groupBy(data, () => title)[title];
+      if (!summary) return '';
+
       return `
         <div class="card shadow mb-4">
           <div class="card-body">
@@ -202,11 +201,13 @@
         return d >= start && d <= end;
       });
 
-      if (cachedTopChannels.length === 0) {
-        initializeChannelList(filteredAll);
-      } else {
-        renderChannelList(cachedTopChannels);
-      }
+        // ✅ Dynamically update Top 20 Channels
+      const newTopChannels = Object.entries(groupBy(filteredAll, e => e.channel))
+        .sort((a, b) => b[1].duration - a[1].duration)
+        .slice(0, 20);
+
+      cachedTopChannels = newTopChannels;
+      renderChannelList(cachedTopChannels);
 
       const selectedChannels = getSelectedChannels();
       const filtered = filteredAll.filter(e => selectedChannels.length === 0 || selectedChannels.includes(e.channel));
@@ -222,9 +223,11 @@
         if (d > weekMap[key].latest) weekMap[key].latest = d;
       });
 
-      const now = new Date();
+      const now = new Date(Math.max(...filtered.map(e => new Date(e.timestamp))));
       const currentMonday = new Date(now);
+
       currentMonday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+      currentMonday.setHours(0, 0, 0, 0);
       const lastMonday = new Date(currentMonday);
       lastMonday.setDate(currentMonday.getDate() - 7);
       const lastSunday = new Date(currentMonday);
@@ -284,7 +287,9 @@
       const dates = watchEventsData.map(e => new Date(e.timestamp));
       defaultStartDate = new Date(Math.min(...dates));
       defaultEndDate = new Date(Math.max(...dates));
-      resetDates();
+      startDateInput.value = defaultStartDate.toISOString().split('T')[0];
+      endDateInput.value = defaultEndDate.toISOString().split('T')[0];
+      updateDisplay();
     });
   </script>
 </body>
